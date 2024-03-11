@@ -33,7 +33,7 @@
 .list li img {
   width: 5rem;
   height: 5rem;
-  border-radius: 100rem;
+  border-radius: 50%;
   object-fit: cover;
 }
 
@@ -96,12 +96,12 @@
 }
 
 .checkout .foods_count::before {
-  content: 'Count: ';
+  content: "Count: ";
   color: grey;
 }
 
 .checkout .total_price::before {
-  content: 'Price: ';
+  content: "Price: ";
   color: grey;
 }
 
