@@ -1,7 +1,7 @@
 {
-  "name": "foodmine",
+  "name": "foodmine-react",
   "version": "1.0.0",
-  "description": "`react-router-dom`",
+  "description": "## 1. Demo And Installation",
   "main": "index.js",
   "scripts": {
     "start": "cd backend && npm start",
@@ -13,6 +13,6 @@
   "author": "",
   "license": "ISC",
   "engines": {
-    "node": ">=18 < 19"
+    "node": ">=18 <19"
   }
 }
