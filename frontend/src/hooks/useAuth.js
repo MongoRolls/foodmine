@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from "react";
 import * as userService from "../services/userService";
 import { toast } from "react-toastify";
+import { usePayPalHostedFields } from "@paypal/react-paypal-js";
 
 const AuthContext = createContext(null);
 
@@ -33,8 +34,21 @@ export const AuthProvider = ({ children }) => {
     toast.success("Logout Successful");
   };
 
+  const updateProfile = async (user) => {
+    const updatedUser = await userService.updateProfile(user);
+    toast.success("Profile Update Was Successful");
+    if (updatedUser) setUser(updatedUser);
+  };
+
+  const changePassword = async (passwords) => {
+    await userService.ChangePassword(passwords);
+    logout();
+    toast.success("Password Change Successfully, Please Login Again!!!");
+  };
   return (
-    <AuthContext.Provider value={{ user, login, logout, register }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, register, updateProfile, changePassword }}
+    >
       {children}
     </AuthContext.Provider>
   );

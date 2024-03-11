@@ -28,80 +28,82 @@ router.post(
   })
 );
 
-// router.put(
-//   "/pay",
-//   handler(async (req, res) => {
-//     const { paymentId } = req.body;
-//     const order = await getNewOrderForCurrentUser(req);
-//     if (!order) {
-//       res.status(BAD_REQUEST).send("Order Not Found!");
-//       return;
-//     }
+router.put(
+  "/pay",
+  handler(async (req, res) => {
+    const { paymentId } = req.body;
+    const order = await getNewOrderForCurrentUser(req);
+    if (!order) {
+      res.status(BAD_REQUEST).send("Order Not Found!");
+      return;
+    }
 
-//     order.paymentId = paymentId;
-//     order.status = OrderStatus.PAYED;
-//     await order.save();
+    order.paymentId = paymentId;
+    order.status = OrderStatus.PAYED;
+    await order.save();
 
-//     sendEmailReceipt(order);
+    // sendEmailReceipt(order);
 
-//     res.send(order._id);
-//   })
-// );
+    res.send(order._id);
+  })
+);
 
-// router.get(
-//   "/track/:orderId",
-//   handler(async (req, res) => {
-//     const { orderId } = req.params;
-//     const user = await UserModel.findById(req.user.id);
+router.get(
+  "/track/:orderId",
+  handler(async (req, res) => {
+    const { orderId } = req.params;
+    const user = await UserModel.findById(req.user.id); //auth.mid.js
 
-//     const filter = {
-//       _id: orderId,
-//     };
+    const filter = {
+      _id: orderId,
+    };
 
-//     if (!user.isAdmin) {
-//       filter.user = user._id;
-//     }
+    if (!user.isAdmin) {
+      filter.user = user._id;
+    }
 
-//     const order = await OrderModel.findOne(filter);
+    const order = await OrderModel.findOne(filter);
 
-//     if (!order) return res.send(UNAUTHORIZED);
+    if (!order) return res.send(UNAUTHORIZED);
 
-//     return res.send(order);
-//   })
-// );
+    return res.send(order);
+  })
+);
 
-// router.get(
-//   "/newOrderForCurrentUser",
-//   handler(async (req, res) => {
-//     const order = await getNewOrderForCurrentUser(req);
-//     if (order) res.send(order);
-//     else res.status(BAD_REQUEST).send();
-//   })
-// );
+router.get(
+  "/newOrderForCurrentUser",
+  handler(async (req, res) => {
+    const order = await getNewOrderForCurrentUser(req);
+    if (order) res.send(order);
+    else res.status(BAD_REQUEST).send("没有找到订单");
 
-// router.get("/allstatus", (req, res) => {
-//   const allStatus = Object.values(OrderStatus);
-//   res.send(allStatus);
-// });
+    return;
+  })
+);
 
-// router.get(
-//   "/:status?",
-//   handler(async (req, res) => {
-//     const status = req.params.status;
-//     const user = await UserModel.findById(req.user.id);
-//     const filter = {};
+router.get("/allstatus", (req, res) => {
+  const allStatus = Object.values(OrderStatus);
+  res.send(allStatus);
+});
 
-//     if (!user.isAdmin) filter.user = user._id;
-//     if (status) filter.status = status;
+router.get(
+  "/:status?",
+  handler(async (req, res) => {
+    const status = req.params.status;
+    const user = await UserModel.findById(req.user.id);
+    const filter = {};
 
-//     const orders = await OrderModel.find(filter).sort("-createdAt");
-//     res.send(orders);
-//   })
-// );
+    if (!user.isAdmin) filter.user = user._id;
+    if (status) filter.status = status;
 
-// const getNewOrderForCurrentUser = async (req) =>
-//   await OrderModel.findOne({
-//     user: req.user.id,
-//     status: OrderStatus.NEW,
-//   }).populate("user");
+    const orders = await OrderModel.find(filter).sort("-createdAt"); //降序
+    res.send(orders);
+  })
+);
+
+const getNewOrderForCurrentUser = async (req) =>
+  await OrderModel.findOne({
+    user: req.user.id,
+    status: OrderStatus.NEW,
+  }).populate("user");
 export default router;

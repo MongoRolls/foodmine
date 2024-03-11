@@ -12,6 +12,8 @@ import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
 import OrderItemsList from "../../components/OrderItemsList/OrderItemsList";
 import Map from "../../components/Map/Map";
+import { useLoading } from "../../hooks/useLoading";
+
 export default function CheckoutPage() {
   const { cart } = useCart();
   const { user } = useAuth();
@@ -31,6 +33,10 @@ export default function CheckoutPage() {
     }
 
     await createOrder({ ...order, name: data.name, address: data.address });
+    // console.log("创建订单并且传输到数据库成功");
+    // toast.info("正在加载");
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
     navigate("/payment");
   };
 
